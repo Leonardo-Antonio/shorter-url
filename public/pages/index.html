@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Lilita+One&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1688673276169991" crossorigin="anonymous"></script>
+    <title>Short URL Generator - Secure Temporary Links</title>
+    <meta name="description" content="This web application allows generating a short URL that will redirect to the original URL provided. The short URL will be valid for a specific time and will be automatically deleted, ensuring temporary and secure access to the generated links.">
+    <meta name="keywords" content="short URL, URL shortener, temporary URL, secure URL, redirect URL, short link, URL generator, tiny URL, tiny link, shorten URL, shorten link, secure link, secure URL">
+    <meta name="author" content="Chemaro">
+    <link rel="canonical" href="https://url.chemaro.com">
+    <meta name="robots" content="index, follow">
+    <link rel="icon" href="/assets/favicon.png" type="image/x-icon">
+
+    <style>
+        .bg-custom {
+            background-color: rgb(27, 30, 31);
+        }
+
+        .lilita-one-regular {
+            font-family: "Lilita One";
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .indie-flower-regular {
+            font-family: "Indie Flower", serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+    </style>
+</head>
+
+<body style="background-color: rgb(37, 39, 40);display: flex; align-items: center; justify-content: center; height: 100vh;">
+
+    <section class="rounded-lg flex gap-[1rem] flex-col bg-custom w-[30rem] justify-center items-center py-[2rem]">
+        <h1 class="text-white text-3xl font-bold indie-flower-regular">Shorten a long URL</h1>
+        <div>
+            <div class="flex flex-col gap-[1rem]">
+                <div class="w-full max-w-sm min-w-[300px]">
+                    <input
+                        class="w-full bg-transparent placeholder:text-slate-400 text-white text-sm border border-slate-200 rounded-md px-3 py-3 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                        placeholder="Enter long link here" type="text" id="url_origin" />
+                </div>
+                <div class="w-full max-w-sm min-w-[300px]">
+                    <div class="w-full max-w-sm min-w-[200px]">
+                        <div class="relative">
+                            <input type="text"
+                                class="w-full bg-transparent placeholder:text-slate-400 text-white text-sm border border-slate-200 rounded-md px-3 py-3 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                                placeholder="Copy short link here" type="text" id="url_tiny" disabled />
+                            <button
+                                class="absolute right-1 top-1 rounded bg-custom py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all"
+                                type="button" id="btn_copy_tinyurl" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    style="fill: rgb(23, 182, 255); --darkreader-inline-fill: #e8e6e3;"
+                                    data-darkreader-inline-fill="">
+                                    <path
+                                        d="M20 2H10c-1.103 0-2 .897-2 2v4H4c-1.103 0-2 .897-2 2v10c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2v-4h4c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zM4 20V10h10l.002 10H4zm16-6h-4v-4c0-1.103-.897-2-2-2h-4V4h10v10z">
+                                    </path>
+                                    <path d="M6 12h6v2H6zm0 4h6v2H6z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button id=""></button>
+                </div>
+            </div>
+            <div class="w-full max-w-sm min-w-[300px]">
+                <button
+                    class="rounded-md bg-blue-600 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-blue-700 focus:shadow-none active:bg-blue-700 hover:bg-blue-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none w-full"
+                    id="btn_generate_urltiny">Shorten URL</button>
+            </div>
+        </div>
+
+        <div class="p-[2rem] text-gray-400 text-sm">
+            <strong>Nota: </strong> <span id="nota">This web application allows generating a short URL that will redirect to the original URL provided. The short URL will be valid for :mins: minutes, after which it will be automatically deleted from the system. This mechanism ensures temporary and secure access to the generated links.
+            </span>
+        </div>
+    </section>
+
+    <script>
+        const getInfoMins = async () => {
+            const response = await fetch("/api/info")
+            const data = await response.json()
+            if (!data.success) {
+                alert("error: " + data.message)
+                return
+            }
+
+            document.getElementById("nota").innerText = document.getElementById("nota").innerText.replace(":mins:", data.data.info)
+        }
+
+        window.onload = () => {
+            getInfoMins()
+
+
+
+            const btnCopy = document.getElementById("btn_copy_tinyurl")
+            document.getElementById("btn_generate_urltiny").addEventListener('click', async () => {
+                document.getElementById("url_tiny").style.borderColor = ""
+                const urlOrigin = document.getElementById("url_origin").value
+                if (urlOrigin == "") {
+                    return
+                }
+
+                const response = await fetch("/api/urls/shorteners", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        "url": urlOrigin
+                    })
+                })
+
+                const data = await response.json()
+                if (!data.success) {
+                    alert("error: " + data.message)
+                    return
+                }
+                
+                btnCopy.removeAttribute("disabled")
+                document.getElementById("url_tiny").value = window.location.origin + data.data.urlShortener
+            })
+
+            btnCopy.addEventListener('click', () => {
+                document.getElementById("url_tiny").style.borderColor = "green"
+                navigator.clipboard.writeText(document.getElementById("url_tiny").value)
+            })
+        }
+    </script>
+</body>
+
+</html>
