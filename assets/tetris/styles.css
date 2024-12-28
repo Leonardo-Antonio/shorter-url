@@ -1,0 +1,117 @@
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: white;
+  background: #302626;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.tetris-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+canvas {
+  background: #000;
+  margin-bottom: 10px;
+}
+
+.score {
+  font-size: 18px;
+  color: #e7e3e3;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 300px;
+  margin-top: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+button:active {
+  background: #555;
+}
+
+.modal_game_over {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: white;
+  background: rgba(6, 3, 3, 0.98);
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.modal_start {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.996);
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+#cuentaRegresiva {
+    color: white;
+    font-size: 5em;
+    text-align: center;
+}
+
+.teclado {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.fila {
+    display: flex;
+    gap: 10px;
+}
+
+.tecla {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    cursor: pointer;
+    user-select: none;
+}
+
+.tecla:hover {
+    background-color: #392929;
+}
+
+#stop {
+    margin: 1rem;
+    width: 13rem;
+}
